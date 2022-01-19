@@ -1,4 +1,4 @@
-module github.com/FernandaCerezo/golang_res.git
+module github.com/FernandaCerezo/golang_res
 
 go 1.17
 
