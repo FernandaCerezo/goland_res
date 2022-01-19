@@ -1,4 +1,4 @@
-module github.com/FernandaCerezo/GoPractice.git
+module github.com/FernandaCerezo/golang_res.git
 
 go 1.17
 
