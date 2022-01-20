@@ -2,8 +2,10 @@ package database
 
 import (
 	"database/sql"
-	// "github.com/lib/pq"
+	"fmt"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 func GetConnection() *sql.DB {
@@ -12,5 +14,12 @@ func GetConnection() *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = db.Ping()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Successfully connected!")
 	return db
 }
