@@ -17,9 +17,9 @@ type Scheduled_items struct {
 func InsertReminder(reminder Scheduled_items) uuid.UUID {
 	db := database.GetConnection()
 	defer db.Close()
-	sqlStatement := `INSERT INTO scheduled.scheduled_items (id, description, users) VALUES ($1, $2, Array['876dc374-9230-4f2d-b3f0-e465af150ea0','8bb421b6-8638-4f27-b087-4aa36acffa8f']::uuid[]) RETURNING id`
+	sqlStatement := `INSERT INTO scheduled.scheduled_items (id, description, users) VALUES ($1, $2, $3) RETURNING id`
 	reminder.Id = uuid.NewV4()
-	err := db.QueryRow(sqlStatement, reminder.Id, reminder.Description).Scan(&reminder.Id)
+	err := db.QueryRow(sqlStatement, reminder.Id, reminder.Description, pq.Array(reminder.Users)).Scan(&reminder.Id)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}

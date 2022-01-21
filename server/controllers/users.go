@@ -2,10 +2,8 @@ package controllers
 
 import (
 	"log"
-	// "os/user"
 
 	"github.com/FernandaCerezo/golang_res/server/database"
-	// "github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
 )
 

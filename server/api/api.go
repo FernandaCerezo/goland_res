@@ -21,6 +21,12 @@ type Data_users struct {
 	Errors  []string            `json:"errors"`
 }
 
+type Data_outputs struct {
+	Success bool                 `json:"success"`
+	Data    []controllers.Output `json:"data"`
+	Errors  []string             `json:"errors"`
+}
+
 type response struct {
 	ID      uuid.UUID `json:"UUID"`
 	Message string    `json:"message,omitempty"`
@@ -42,6 +48,7 @@ func CreateReminder(w http.ResponseWriter, req *http.Request) {
 	}
 
 	insertID := controllers.InsertReminder(reminder)
+
 	res := response{
 		ID:      insertID,
 		Message: "User created successfully",
@@ -51,9 +58,9 @@ func CreateReminder(w http.ResponseWriter, req *http.Request) {
 }
 
 func GetReminders(w http.ResponseWriter, req *http.Request) {
-	var todos []controllers.Scheduled_items = controllers.GetAll()
+	var reminder []controllers.Scheduled_items = controllers.GetAll()
 
-	var data = Data_scheduled{true, todos, make([]string, 0)}
+	var data = Data_scheduled{true, reminder, make([]string, 0)}
 	json, _ := json.Marshal(data)
 
 	w.Header().Set("Content-Type", "application/json")
@@ -86,9 +93,45 @@ func CreateUser(w http.ResponseWriter, req *http.Request) {
 }
 
 func GetAllUsers(w http.ResponseWriter, req *http.Request) {
-	var todos []controllers.Users = controllers.GetAllUsers()
+	var users []controllers.Users = controllers.GetAllUsers()
 
-	var data = Data_users{true, todos, make([]string, 0)}
+	var data = Data_users{true, users, make([]string, 0)}
+
+	json, _ := json.Marshal(data)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+func CreateOutput(w http.ResponseWriter, req *http.Request) {
+
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	var output controllers.Output
+
+	err := json.NewDecoder(req.Body).Decode(&output)
+
+	if err != nil {
+		log.Fatalf("Unable to decode the request body.  %v", err)
+	}
+
+	insertID := controllers.CreateOutput(output)
+	res := response{
+		ID:      insertID,
+		Message: "User created successfully",
+	}
+
+	json.NewEncoder(w).Encode(res)
+}
+
+func GetAllOutput(w http.ResponseWriter, req *http.Request) {
+	var outputs []controllers.Output = controllers.GetAllOutput()
+
+	var data = Data_outputs{true, outputs, make([]string, 0)}
 
 	json, _ := json.Marshal(data)
 
